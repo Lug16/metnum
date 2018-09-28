@@ -4,13 +4,33 @@
 <head>
   <script type="text/javascript" src="graph.js"></script>
   <script type="text/javascript" src="math.min.js"></script>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"
+    async></script>
   <style>
     body {
         margin: 0px;
         padding: 0px;
       }
 
+      #resultTable{
+        border:1px solid darkslategrey;
+        border-collapse:collapse;
+      }
+      #resultTable td{
+        border:1px solid darkslategrey;
+        padding:0.5em;
+      }
+      #resultTable tr:first-child{
+        font-weight: bold;
+        text-align: center;
+      }
+      #resultTable td:first-child{
+        text-align: center;
+      }
+      #resultTable .answer{
+        background: rgba(255,0,0,0.3);
+        font-weight: bold;
+      }
     </style>
 </head>
 
@@ -25,33 +45,8 @@
   <div style="display:flex; flex-direction: row">
     <canvas id="myCanvas" width="500" height="500"></canvas>
     <div style="display:flex; flex-direction:column">
-      <p>
-        Si \(f'(x_n) \ne 0\)
-        $$x_{(n+1)}=x_n - {f(x_n) \over f'(x_n)}$$
-      </p>
-
-      <table style="border:1px solid black">
-        <tr>
-          <td>\(x_n\)</td>
-          <td>1</td>
-        </tr>
-        <tr>
-          <td>\(f(x_n)\)</td>
-          <td>1</td>
-        </tr>
-        <tr>
-          <td>\(f'(x_n)\)</td>
-          <td>1</td>
-        </tr>
-        <tr>
-          <td>\(x_{(n+1)}\)</td>
-          <td>1</td>
-        </tr>
-        <tr>
-          <td>\(E\)</td>
-          <td>1</td>
-        </tr>
-      </table>
+      <p id="methodMessage"></p>
+      <table id="resultTable"></table>
     </div>
   </div>
   <script>
@@ -64,13 +59,13 @@
       maxY: 5,
       unitsPerTick: 1
     }
+    let firstUpdate = true;
 
     function graphEquation() {
       const equation = math.parse(document.getElementById('equationInput').value);
       const seed = document.getElementById("seedInput").value;
-      const error = Math.pow(10, -Math.abs(document.getElementById('errorInput').value));
-
-      console.info(error);
+      const errorInput = document.getElementById('errorInput').value;
+      const error = Math.pow(10, -Math.abs(errorInput));
 
       const myGraph = new Graph(conf);
 
@@ -78,55 +73,97 @@
         return equation.eval({ x });
       }, 'blue', 2);
 
-      solveNewtonRaphson(equation, seed, error);
+      const solution = solveNewtonRaphson(equation, seed, error);
+      displaySolution(solution, errorInput);
+    }
+
+    function displaySolution(solution, decimals) {
+      const methodMessage = document.getElementById("methodMessage");
+      const resultTable = document.getElementById("resultTable");
+
+      methodMessage.innerHTML = solution.message;
+      resultTable.innerHTML = '';
+
+      for (i = 0; i < solution.fields.length; i++) {
+        const row = resultTable.insertRow(i);
+        const cell = row.insertCell(0);
+        const integer = solution.fields[i].int;
+        const isAnswer = solution.fields[i].isAnswer;
+
+        cell.innerHTML = `\\(${solution.fields[i].title}\\)`;
+
+        for (j = 0; j < solution.fields[i].values.length; j++) {
+          const cell = row.insertCell(j + 1);
+          const value = solution.fields[i].values[j];
+          const isLastCell = j + 1 == solution.fields[i].values.length;
+          cell.classList.add(isAnswer && isLastCell ? 'answer' : 'x');
+          cell.innerHTML = !!value ? (!!integer ? value : value.toFixed(decimals)) : '-';
+        }
+      }
+
+      MathJax.Hub.Queue(['Typeset', MathJax.Hub, methodMessage]);
+      MathJax.Hub.Queue(['Typeset', MathJax.Hub, resultTable]);
     }
 
     function solveNewtonRaphson(equation, seed, error) {
       let solution = {
         fields: [
           {
+            "title": "n",
+            "values": [],
+            "int": true
+          },
+          {
             "title": "x_n",
-            "values": []
+            "values": [],
           },
           {
             "title": "f(x_n)",
-            "values": []
+            "values": [],
           },
           {
             "title": "f'(x_n)",
-            "values": []
+            "values": [],
           },
           {
             "title": "x_{(n+1)}",
-            "values": []
+            "values": [],
+            "isAnswer": true
+          },
+          {
+            "title": "E",
+            "values": [],
           }
-        ]
+        ],
+        message: " Si \\(f'(x_n) \\ne 0\\) $$x_{(n+1)}=x_n - {f(x_n) \\over f'(x_n)}$$",
+        method: "Newton-Raphson"
       }
 
       let currentError = 1;
       let x = parseInt(seed);
       let counter = 0;
 
-      while (currentError > error) {
+      do {
         const fx = equation.eval({ x });
         const dfx = math.derivative(equation, math.parse('x')).eval({ x });
         const y = x - fx / dfx;
 
-        solution.fields[0].values.push(x);
-        solution.fields[1].values.push(fx);
-        solution.fields[2].values.push(dfx);
-        solution.fields[3].values.push(y);
-
         currentError = counter > 0
-          ? solution.fields[3].values[counter - 1] - y
+          ? solution.fields[4].values[counter - 1] - y
           : 1;
 
+        solution.fields[0].values.push(counter + 1);
+        solution.fields[1].values.push(x);
+        solution.fields[2].values.push(fx);
+        solution.fields[3].values.push(dfx);
+        solution.fields[4].values.push(y);
+        solution.fields[5].values.push(counter > 0 ? currentError : null);
+
         x = y;
-
         counter++;
-      }
+      } while (currentError > error)
 
-      console.info(solution);
+      return solution;
     }
   </script>
 </body>
