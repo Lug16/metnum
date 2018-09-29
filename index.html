@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -6,41 +6,15 @@
   <script type="text/javascript" src="math.min.js"></script>
   <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"
     async></script>
-  <style>
-    body {
-        margin: 0px;
-        padding: 0px;
-      }
-
-      #resultTable{
-        border:1px solid darkslategrey;
-        border-collapse:collapse;
-      }
-      #resultTable td{
-        border:1px solid darkslategrey;
-        padding:0.5em;
-      }
-      #resultTable tr:first-child{
-        font-weight: bold;
-        text-align: center;
-      }
-      #resultTable td:first-child{
-        text-align: center;
-      }
-      #resultTable .answer{
-        background: rgba(255,0,0,0.3);
-        font-weight: bold;
-      }
-    </style>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 </head>
 
 <body>
-  <div>
+  <div style="text-align:center">
     <input id="equationInput" type="text" value="" placeholder="Inserte ecuacion (ejem: x^3-x-1)" />
+    <input id="seedInput" type="number" value="" placeholder="Punto Inicial (ejem: 1)" />
+    <input id="errorInput" type="number" value="" placeholder="Error (ejem: 3)" />
     <button onclick="graphEquation()">Graficar</button>
-    <br />
-    <input id="seedInput" type="text" value="" placeholder="Punto Inicial" />
-    <input id="errorInput" type="number" value="" placeholder="Error" />
   </div>
   <div style="display:flex; flex-direction: row">
     <canvas id="myCanvas" width="500" height="500"></canvas>
@@ -167,5 +141,68 @@
     }
   </script>
 </body>
+<style>
+  html,
+  input,
+  button {
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  body {
+    background-color: white;
+    margin: 0px;
+    padding: 0px;
+  }
+
+  input[type=text],
+  input[type=number],
+  button,
+  select {
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
+  button {
+    background-color: rgb(50, 80, 212);
+    color: white;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color:  rgb(77, 102, 212);
+  }
+
+  #equationInput {
+    width: 20em;
+  }
+
+  #resultTable {
+    border: 1px solid darkslategrey;
+    border-collapse: collapse;
+  }
+
+  #resultTable td {
+    border: 1px solid darkslategrey;
+    padding: 0.5em;
+  }
+
+  #resultTable tr:first-child {
+    font-weight: bold;
+    text-align: center;
+  }
+
+  #resultTable td:first-child {
+    text-align: center;
+  }
+
+  #resultTable .answer {
+    background: rgba(255, 0, 0, 0.3);
+    font-weight: bold;
+  }
+</style>
 
 </html>
