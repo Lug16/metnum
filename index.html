@@ -8,6 +8,66 @@
     async></script>
   <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="style.css">
+
+  <script type="module">
+      import solveNewtonRaphson from './methods/newton-raphson.mjs';
+  
+      const conf = {
+        canvasId: 'myCanvas',
+        minX: -5,
+        minY: -5,
+        maxX: 5,
+        maxY: 5,
+        unitsPerTick: 1
+      }
+      let firstUpdate = true;
+  
+      function graphEquation() {
+        const equation = math.parse(document.getElementById('equationInput').value);
+        const seed = Math.abs(document.getElementById("seedInput").value);
+        const errorInput = Math.abs(document.getElementById('errorInput').value);
+        const error = Math.pow(10, -errorInput);
+  
+        const myGraph = new Graph(conf);
+  
+        myGraph.drawEquation(function (x) {
+          return equation.eval({ x });
+        }, 'blue', 2);
+  
+        const solution = solveNewtonRaphson(equation, seed, error);
+        displaySolution(solution, errorInput);
+      }
+  
+      function displaySolution(solution, decimals) {
+        const methodTitle = document.getElementById("methodTitle");
+        const methodMessage = document.getElementById("methodMessage");
+        const resultTable = document.getElementById("resultTable");
+  
+        methodTitle.innerText = solution.methodName;
+        methodMessage.innerHTML = solution.message;
+        resultTable.innerHTML = '';
+  
+        for (i = 0; i < solution.fields.length; i++) {
+          const row = resultTable.insertRow(i);
+          const cell = row.insertCell(0);
+          const integer = solution.fields[i].int;
+          const isAnswer = solution.fields[i].isAnswer;
+  
+          cell.innerHTML = `\\(${solution.fields[i].title}\\)`;
+  
+          for (j = 0; j < solution.fields[i].values.length; j++) {
+            const cell = row.insertCell(j + 1);
+            const value = solution.fields[i].values[j];
+            const isLastCell = j + 1 == solution.fields[i].values.length;
+            cell.classList.add(isAnswer && isLastCell ? 'answer' : 'x');
+            cell.innerHTML = !!value ? (!!integer ? value : value.toFixed(decimals)) : '-';
+          }
+        }
+  
+        MathJax.Hub.Queue(['Typeset', MathJax.Hub, methodMessage]);
+        MathJax.Hub.Queue(['Typeset', MathJax.Hub, resultTable]);
+      }
+    </script>
 </head>
 
 <body>
@@ -25,65 +85,6 @@
       <table id="resultTable"></table>
     </div>
   </div>
-  <script type="module">
-    import solveNewtonRaphson from './methods/newton-raphson.mjs';
-
-    const conf = {
-      canvasId: 'myCanvas',
-      minX: -5,
-      minY: -5,
-      maxX: 5,
-      maxY: 5,
-      unitsPerTick: 1
-    }
-    let firstUpdate = true;
-
-    export function graphEquation() {
-      const equation = math.parse(document.getElementById('equationInput').value);
-      const seed = Math.abs(document.getElementById("seedInput").value);
-      const errorInput = Math.abs(document.getElementById('errorInput').value);
-      const error = Math.pow(10, -errorInput);
-
-      const myGraph = new Graph(conf);
-
-      myGraph.drawEquation(function (x) {
-        return equation.eval({ x });
-      }, 'blue', 2);
-
-      const solution = solveNewtonRaphson(equation, seed, error);
-      displaySolution(solution, errorInput);
-    }
-
-    function displaySolution(solution, decimals) {
-      const methodTitle = document.getElementById("methodTitle");
-      const methodMessage = document.getElementById("methodMessage");
-      const resultTable = document.getElementById("resultTable");
-
-      methodTitle.innerText = solution.methodName;
-      methodMessage.innerHTML = solution.message;
-      resultTable.innerHTML = '';
-
-      for (i = 0; i < solution.fields.length; i++) {
-        const row = resultTable.insertRow(i);
-        const cell = row.insertCell(0);
-        const integer = solution.fields[i].int;
-        const isAnswer = solution.fields[i].isAnswer;
-
-        cell.innerHTML = `\\(${solution.fields[i].title}\\)`;
-
-        for (j = 0; j < solution.fields[i].values.length; j++) {
-          const cell = row.insertCell(j + 1);
-          const value = solution.fields[i].values[j];
-          const isLastCell = j + 1 == solution.fields[i].values.length;
-          cell.classList.add(isAnswer && isLastCell ? 'answer' : 'x');
-          cell.innerHTML = !!value ? (!!integer ? value : value.toFixed(decimals)) : '-';
-        }
-      }
-
-      MathJax.Hub.Queue(['Typeset', MathJax.Hub, methodMessage]);
-      MathJax.Hub.Queue(['Typeset', MathJax.Hub, resultTable]);
-    }
-  </script>
 </body>
 
 </html>
