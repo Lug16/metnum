@@ -38,7 +38,7 @@
     }
     let firstUpdate = true;
 
-    function graphEquation() {
+    export function graphEquation() {
       const equation = math.parse(document.getElementById('equationInput').value);
       const seed = Math.abs(document.getElementById("seedInput").value);
       const errorInput = Math.abs(document.getElementById('errorInput').value);
