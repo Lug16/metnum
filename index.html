@@ -7,6 +7,7 @@
   <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"
     async></script>
   <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
@@ -19,11 +20,13 @@
   <div id="container">
     <canvas id="myCanvas" width="500" height="500"></canvas>
     <div>
+      <h2 id="methodTitle"></h2>
       <p id="methodMessage"></p>
       <table id="resultTable"></table>
     </div>
   </div>
-  <script>
+  <script type="module">
+    import solveNewtonRaphson from './methods/newton-raphson.mjs';
 
     const conf = {
       canvasId: 'myCanvas',
@@ -37,9 +40,9 @@
 
     function graphEquation() {
       const equation = math.parse(document.getElementById('equationInput').value);
-      const seed = document.getElementById("seedInput").value;
-      const errorInput = document.getElementById('errorInput').value;
-      const error = Math.pow(10, -Math.abs(errorInput));
+      const seed = Math.abs(document.getElementById("seedInput").value);
+      const errorInput = Math.abs(document.getElementById('errorInput').value);
+      const error = Math.pow(10, -errorInput);
 
       const myGraph = new Graph(conf);
 
@@ -52,9 +55,11 @@
     }
 
     function displaySolution(solution, decimals) {
+      const methodTitle = document.getElementById("methodTitle");
       const methodMessage = document.getElementById("methodMessage");
       const resultTable = document.getElementById("resultTable");
 
+      methodTitle.innerText = solution.methodName;
       methodMessage.innerHTML = solution.message;
       resultTable.innerHTML = '';
 
@@ -78,143 +83,7 @@
       MathJax.Hub.Queue(['Typeset', MathJax.Hub, methodMessage]);
       MathJax.Hub.Queue(['Typeset', MathJax.Hub, resultTable]);
     }
-
-    function solveNewtonRaphson(equation, seed, error) {
-      let solution = {
-        fields: [
-          {
-            "title": "n",
-            "values": [],
-            "int": true
-          },
-          {
-            "title": "x_n",
-            "values": [],
-          },
-          {
-            "title": "f(x_n)",
-            "values": [],
-          },
-          {
-            "title": "f'(x_n)",
-            "values": [],
-          },
-          {
-            "title": "x_{(n+1)}",
-            "values": [],
-            "isAnswer": true
-          },
-          {
-            "title": "E",
-            "values": [],
-          }
-        ],
-        message: " Si \\(f'(x_n) \\ne 0\\) $$x_{(n+1)}=x_n - {f(x_n) \\over f'(x_n)}$$",
-        method: "Newton-Raphson"
-      }
-
-      let currentError = 1;
-      let x = parseInt(seed);
-      let counter = 0;
-
-      do {
-        const fx = equation.eval({ x });
-        const dfx = math.derivative(equation, math.parse('x')).eval({ x });
-        const y = x - fx / dfx;
-
-        currentError = counter > 0
-          ? solution.fields[4].values[counter - 1] - y
-          : 1;
-
-        solution.fields[0].values.push(counter + 1);
-        solution.fields[1].values.push(x);
-        solution.fields[2].values.push(fx);
-        solution.fields[3].values.push(dfx);
-        solution.fields[4].values.push(y);
-        solution.fields[5].values.push(counter > 0 ? currentError : null);
-
-        x = y;
-        counter++;
-      } while (currentError > error)
-
-      return solution;
-    }
   </script>
 </body>
-<style>
-  html,
-  input,
-  button {
-    font-family: 'Montserrat', sans-serif;
-  }
-
-  body {
-    background-color: white;
-    margin: 0px;
-    padding: 0px;
-  }
-
-  input[type=text],
-  input[type=number],
-  button,
-  select {
-    padding: 12px 20px;
-    margin: 8px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-
-  button {
-    background-color: rgb(50, 80, 212);
-    color: white;
-    cursor: pointer;
-  }
-
-  button:hover {
-    background-color: rgb(77, 102, 212);
-  }
-
-  #container {
-    display: flex;
-    flex-direction: row
-  }
-
-  #container>div {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin: 20px;
-  }
-
-  #equationInput {
-    width: 20em;
-  }
-
-  #resultTable {
-    border: 1px solid darkslategrey;
-    border-collapse: collapse;
-  }
-
-  #resultTable td {
-    border: 1px solid darkslategrey;
-    padding: 0.5em;
-  }
-
-  #resultTable tr:first-child {
-    font-weight: bold;
-    text-align: center;
-  }
-
-  #resultTable td:first-child {
-    text-align: center;
-  }
-
-  #resultTable .answer {
-    background: rgba(255, 0, 0, 0.3);
-    font-weight: bold;
-  }
-</style>
 
 </html>

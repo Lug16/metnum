@@ -1,0 +1,74 @@
+html,
+  input,
+  button {
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  body {
+    background-color: white;
+    margin: 0px;
+    padding: 0px;
+  }
+
+  input[type=text],
+  input[type=number],
+  button,
+  select {
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
+  button {
+    background-color: rgb(50, 80, 212);
+    color: white;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: rgb(77, 102, 212);
+  }
+
+  #container {
+    display: flex;
+    flex-direction: row
+  }
+
+  #container>div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 20px;
+  }
+
+  #equationInput {
+    width: 20em;
+  }
+
+  #resultTable {
+    border: 1px solid darkslategrey;
+    border-collapse: collapse;
+  }
+
+  #resultTable td {
+    border: 1px solid darkslategrey;
+    padding: 0.5em;
+    text-align: right;
+  }
+
+  #resultTable tr:first-child td {
+    font-weight: bold;
+    text-align: center;
+  }
+
+  #resultTable td:first-child {
+    text-align: center;
+  }
+
+  #resultTable .answer {
+    background: rgba(50, 80, 212, 0.3);
+    font-weight: bold;
+  }
