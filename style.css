@@ -51,6 +51,7 @@ html,
   #resultTable {
     border: 1px solid darkslategrey;
     border-collapse: collapse;
+    width:100%;
   }
 
   #resultTable td {

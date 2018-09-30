@@ -2,72 +2,63 @@
 <html>
 
 <head>
-  <script type="text/javascript" src="graph.js"></script>
-  <script type="text/javascript" src="math.min.js"></script>
+  <script type="text/javascript" src="./references/graph.js"></script>
+  <script type="text/javascript" src="./references/math.min.js"></script>
   <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"
     async></script>
   <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="style.css">
 
   <script type="module">
-      import solveNewtonRaphson from './methods/newton-raphson.mjs';
-  
-      const conf = {
-        canvasId: 'myCanvas',
-        minX: -5,
-        minY: -5,
-        maxX: 5,
-        maxY: 5,
-        unitsPerTick: 1
-      }
-      let firstUpdate = true;
-  
-      function graphEquation() {
-        const equation = math.parse(document.getElementById('equationInput').value);
-        const seed = Math.abs(document.getElementById("seedInput").value);
-        const errorInput = Math.abs(document.getElementById('errorInput').value);
-        const error = Math.pow(10, -errorInput);
-  
-        const myGraph = new Graph(conf);
-  
-        myGraph.drawEquation(function (x) {
-          return equation.eval({ x });
-        }, 'blue', 2);
-  
-        const solution = solveNewtonRaphson(equation, seed, error);
-        displaySolution(solution, errorInput);
-      }
-  
-      function displaySolution(solution, decimals) {
-        const methodTitle = document.getElementById("methodTitle");
-        const methodMessage = document.getElementById("methodMessage");
-        const resultTable = document.getElementById("resultTable");
-  
-        methodTitle.innerText = solution.methodName;
-        methodMessage.innerHTML = solution.message;
-        resultTable.innerHTML = '';
-  
-        for (i = 0; i < solution.fields.length; i++) {
-          const row = resultTable.insertRow(i);
-          const cell = row.insertCell(0);
-          const integer = solution.fields[i].int;
-          const isAnswer = solution.fields[i].isAnswer;
-  
-          cell.innerHTML = `\\(${solution.fields[i].title}\\)`;
-  
-          for (j = 0; j < solution.fields[i].values.length; j++) {
-            const cell = row.insertCell(j + 1);
-            const value = solution.fields[i].values[j];
-            const isLastCell = j + 1 == solution.fields[i].values.length;
-            cell.classList.add(isAnswer && isLastCell ? 'answer' : 'x');
-            cell.innerHTML = !!value ? (!!integer ? value : value.toFixed(decimals)) : '-';
-          }
-        }
-  
-        MathJax.Hub.Queue(['Typeset', MathJax.Hub, methodMessage]);
-        MathJax.Hub.Queue(['Typeset', MathJax.Hub, resultTable]);
-      }
-    </script>
+    import {displaySolution} from './metnum.js';
+    import solveNewtonRaphson from './methods/newton-raphson.mjs';
+
+    const controls = {
+      graphButton: document.getElementById('graphButton'),
+      equationInput: document.getElementById('equationInput'),
+      seedInput: document.getElementById("seedInput"),
+      errorInput: document.getElementById('errorInput'),
+      methodTitle: document.getElementById("methodTitle"),
+      methodMessage: document.getElementById("methodMessage"),
+      resultTable: document.getElementById("resultTable")
+    }
+
+    const { graphButton } = controls;
+    graphButton.addEventListener("click", solve)
+
+    const conf = {
+      canvasId: 'myCanvas',
+      minX: -5,
+      minY: -5,
+      maxX: 5,
+      maxY: 5,
+      unitsPerTick: 1
+    }
+
+    function solve(){
+      const equation = math.parse(controls.equationInput.value);
+
+      graphEquation(equation);
+      solveEquation(equation);
+    }
+
+    function graphEquation(equation) {
+      const myGraph = new Graph(conf);
+
+      myGraph.drawEquation(function (x) {
+        return equation.eval({ x });
+      }, 'blue', 2);
+    }
+
+    function solveEquation(equation){
+      const seed = Math.abs(controls.seedInput.value);
+      const error = Math.pow(10, -Math.abs(controls.errorInput.value));
+
+      const solution = solveNewtonRaphson(equation, seed, error);
+
+      displaySolution(solution, controls);
+    }
+  </script>
 </head>
 
 <body>
@@ -75,7 +66,7 @@
     <input id="equationInput" type="text" value="x^3-x-1" placeholder="Inserte ecuaci&#243;n (ejem: x^3-x-1)" />
     <input id="seedInput" type="number" value="1" placeholder="Punto Inicial (ejem: 1)" />
     <input id="errorInput" type="number" value="3" placeholder="Error (ejem: 3)" />
-    <button onclick="graphEquation()">Graficar</button>
+    <button id="graphButton">Graficar</button>
   </div>
   <div id="container">
     <canvas id="myCanvas" width="500" height="500"></canvas>
