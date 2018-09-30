@@ -10,9 +10,9 @@ html,
     padding: 0px;
   }
 
-  input[type=text],
-  input[type=number],
   button,
+  input[type=number],
+  input[type=text],
   select {
     padding: 12px 20px;
     margin: 8px 0;

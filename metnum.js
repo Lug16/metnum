@@ -6,7 +6,7 @@ export function displaySolution(solution, controls) {
       resultTable
     } = controls;
 
-    const decimals = Math.abs(errorInput.value);
+    const decimals = Math.abs(3);
 
     methodTitle.innerText = solution.methodName;
     methodMessage.innerHTML = solution.message;
