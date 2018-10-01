@@ -1,4 +1,4 @@
-import * as methods from '../methods/index.mjs';
+import {NewtonRaphson} from '../methods/index.mjs';
 
 export const solution = {
     fields: [],
@@ -9,7 +9,7 @@ export const solution = {
 export const methodsList = [
     {
         "name": "Newton-Raphson",
-        "solve": methods.NewtonRaphson.solve,
-        "inputFields": methods.NewtonRaphson.inputFields
+        "solve": NewtonRaphson.solve,
+        "inputFields": NewtonRaphson.inputFields
     }
 ]

@@ -1,6 +1,11 @@
 import { solution } from '../references/common.mjs'
 
-export function solve(equation, seed, error) {
+export function solve(equation, error, { inputFields }) {
+  const seed = Math.abs(inputFields.filter(r => r.id == 'seedInput')[0].value);
+
+  console.info(seed);
+  console.info(error);
+
   solution.fields = [
     {
       "title": "n",
@@ -62,14 +67,7 @@ export function solve(equation, seed, error) {
 export const inputFields = [
   {
     "id": 'seedInput',
-    "placeholder": 'Punto Inicial (ejem: 1)',
-    "label": '',
+    "label": 'Punto Inicial',
     "value": '1'
-  },
-  {
-    "id": 'errorInput',
-    "placeholder": 'Error (ejem: 3)',
-    "label": '',
-    "value": '3'
   }
 ]

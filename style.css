@@ -26,6 +26,7 @@ html,
     background-color: rgb(50, 80, 212);
     color: white;
     cursor: pointer;
+    width: 100%;
   }
 
   button:hover {
@@ -72,4 +73,24 @@ html,
   #resultTable .answer {
     background: rgba(50, 80, 212, 0.3);
     font-weight: bold;
+  }
+  
+  .inputResource{
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+  }
+
+  .inputResource input{
+    width: 70px;
+  }
+
+  .inputResource span{
+    font-size: small;
+  }
+
+  .inputResource > div{
+    display: flex;
+    flex-flow: column;
+    align-items: center;
   }

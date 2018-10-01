@@ -12,11 +12,23 @@
 
 <body>
   <div style="text-align:center">
-    <select id="methodsSelect">
-      <option>Seleccione...</option>
-    </select>
-    <input id="equationInput" type="text" value="x^3-x-1" placeholder="Inserte ecuaci&#243;n (ejem: x^3-x-1)" />
-    <div id="dynamicContainer"></div>
+    <div class="inputResource">
+      <div>
+        <select id="methodsSelect">
+          <option>Seleccione M&#233;todo...</option>
+        </select>
+        <span>M&#233;todo</span>
+      </div>
+      <div>
+        <input id="equationInput" type="text" value="x^3-x-1" placeholder="Inserte ecuaci&#243;n (ejem: x^3-x-1)" />
+        <span>Ecuaci&#243;n</span>
+      </div>
+      <div>
+        <input id="errorInput" type="number" value="3" placeholder="Inserte Error (ejem: 3)" />
+        <span>Error</span>
+      </div>
+    </div>
+    <div id="dynamicContainer" class="inputResource"></div>
     <button id="graphButton">Graficar</button>
   </div>
   <div id="container">
@@ -35,6 +47,8 @@
   const controls = {
     graphButton: document.getElementById('graphButton'),
     equationInput: document.getElementById('equationInput'),
+    errorInput: document.getElementById('errorInput'),
+    dynamicContainer: document.getElementById('dynamicContainer'),
     methodMessage: document.getElementById("methodMessage"),
     methodsSelect: document.getElementById("methodsSelect"),
     methodTitle: document.getElementById("methodTitle"),
@@ -60,7 +74,7 @@
   function load() {
     const { methodsSelect } = controls;
 
-    methodsList.map(r => {
+    methodsList.forEach(r => {
       const method = document.createElement("option");
       const text = document.createTextNode(r.name);
       method.appendChild(text);
@@ -70,7 +84,56 @@
   }
 
   function methodSelected(e) {
-    selectedMethod = methodsList.filter(r => r.name === this.options[this.selectedIndex].value)[0];
+    cleanMethodInputFields();
+
+    if (this.selectedIndex > 0) {
+      selectedMethod = methodsList.filter(r => r.name === this.options[this.selectedIndex].value)[0];
+      drawMethodInputFields();
+    }
+  }
+
+  function handleChange(e) {
+    const id = e.target.id;
+    selectedMethod.inputFields.filter(r => r.id == id)[0].value = e.target.value;
+  }
+
+  function drawMethodInputFields() {
+    const { inputFields } = selectedMethod;
+    const { dynamicContainer } = controls;
+
+    dynamicContainer.innerHTML = '';
+
+    inputFields.forEach(r => {
+      const div = document.createElement("div");
+      const input = document.createElement("input");
+      const span = document.createElement("span");
+
+      let att = document.createAttribute("type");
+      att.value = "number";
+      input.setAttributeNode(att);
+
+      att = document.createAttribute("id");
+      att.value = r.id;
+      input.setAttributeNode(att);
+
+      att = document.createAttribute("value");
+      att.value = r.value;
+      input.setAttributeNode(att);
+
+      input.addEventListener("change", handleChange);
+
+      const text = document.createTextNode(r.label);
+      span.appendChild(text);
+
+      div.appendChild(input);
+      div.appendChild(span);
+      dynamicContainer.appendChild(div);
+    });
+  }
+
+  function cleanMethodInputFields() {
+    const { dynamicContainer } = controls;
+    dynamicContainer.innerHTML = '';
   }
 
   function solve() {
@@ -82,16 +145,12 @@
 
   function graphEquation(equation) {
     const myGraph = new Graph(conf);
-
-    myGraph.drawEquation(function (x) {
-      return equation.eval({ x });
-    }, 'blue', 2);
+    myGraph.drawEquation(x => equation.eval({ x }), 'blue', 2);
   }
 
   function solveEquation(equation) {
-    const error = Math.pow(10, -3);
-
-    const solution = selectedMethod.solve(equation, 1, error);
+    const error = Math.pow(10, -Math.abs(controls.errorInput.value));
+    const solution = selectedMethod.solve(equation, error, selectedMethod);
 
     displaySolution(solution, controls);
   }
