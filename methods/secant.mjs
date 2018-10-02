@@ -1,8 +1,8 @@
 import { solution } from '../references/common.mjs'
 
 export function solve(equation, error, { inputFields }) {
-    let x0 = Math.abs(inputFields.filter(r => r.id == 'x0')[0].value);
-    let x1 = Math.abs(inputFields.filter(r => r.id == 'x1')[0].value);
+    let x0 = parseInt(inputFields.filter(r => r.id == 'x0')[0].value);
+    let x1 = parseInt(inputFields.filter(r => r.id == 'x1')[0].value);
 
     let solution = initSolution();
 
