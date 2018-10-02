@@ -3,39 +3,7 @@ import { solution } from '../references/common.mjs'
 export function solve(equation, error, { inputFields }) {
   const seed = Math.abs(inputFields.filter(r => r.id == 'seedInput')[0].value);
 
-  console.info(seed);
-  console.info(error);
-
-  solution.fields = [
-    {
-      "title": "n",
-      "values": [],
-      "int": true
-    },
-    {
-      "title": "x_n",
-      "values": [],
-    },
-    {
-      "title": "f(x_n)",
-      "values": [],
-    },
-    {
-      "title": "f'(x_n)",
-      "values": [],
-    },
-    {
-      "title": "x_{(n+1)}",
-      "values": [],
-      "isAnswer": true
-    },
-    {
-      "title": "E",
-      "values": [],
-    }
-  ];
-  solution.message = " Si \\(f'(x_n) \\ne 0\\) $$x_{(n+1)}=x_n - {f(x_n) \\over f'(x_n)}$$";
-  solution.methodName = "Newton-Raphson";
+  let solution = initSolution();
 
   let currentError = 1;
   let x = parseInt(seed);
@@ -64,6 +32,7 @@ export function solve(equation, error, { inputFields }) {
   return solution;
 }
 
+
 export const inputFields = [
   {
     "id": 'seedInput',
@@ -71,3 +40,38 @@ export const inputFields = [
     "value": '1'
   }
 ]
+
+function initSolution() {
+  solution.fields = [
+    {
+      "title": "n",
+      "values": [],
+      "int": true
+    },
+    {
+      "title": "x_n",
+      "values": [],
+    },
+    {
+      "title": "f(x_n)",
+      "values": [],
+    },
+    {
+      "title": "f'(x_n)",
+      "values": [],
+    },
+    {
+      "title": "x_{(n+1)}",
+      "values": [],
+      "isAnswer": true
+    },
+    {
+      "title": "E",
+      "values": [],
+    }
+  ];
+  solution.message = "Si \\(f'(x_n) \\ne 0\\) $$x_{(n+1)}=x_n - {f(x_n) \\over f'(x_n)}$$";
+  solution.methodName = "Newton-Raphson";
+
+  return solution;
+}
