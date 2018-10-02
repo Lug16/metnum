@@ -1,5 +1,7 @@
 import { solution } from '../references/common.mjs'
 
+export const name = "Newton-Raphson";
+
 export function solve(equation, error, { inputFields }) {
   const seed = Math.abs(inputFields.filter(r => r.id == 'seedInput')[0].value);
 
@@ -71,7 +73,7 @@ function initSolution() {
     }
   ];
   solution.message = "Si \\(f'(x_n) \\ne 0\\) $$x_{(n+1)}=x_n - {f(x_n) \\over f'(x_n)}$$";
-  solution.methodName = "Newton-Raphson";
+  solution.methodName = name;
 
   return solution;
 }

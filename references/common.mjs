@@ -1,7 +1,4 @@
-import {
-    NewtonRaphson,
-    Secant
-} from '../methods/index.mjs';
+import Methods from '../methods/index.mjs';
 
 export const solution = {
     fields: [],
@@ -11,13 +8,13 @@ export const solution = {
 
 export const methodsList = [
     {
-        "name": "Newton-Raphson",
-        "solve": NewtonRaphson.solve,
-        "inputFields": NewtonRaphson.inputFields
+        "name": Methods.NewtonRaphson.name,
+        "solve": Methods.NewtonRaphson.solve,
+        "inputFields": Methods.NewtonRaphson.inputFields
     },
     {
-        "name": "Secante",
-        "solve": Secant.solve,
-        "inputFields": Secant.inputFields
+        "name": Methods.Secant.name,
+        "solve": Methods.Secant.solve,
+        "inputFields": Methods.Secant.inputFields
     }
 ]

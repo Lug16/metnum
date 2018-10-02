@@ -1,5 +1,7 @@
 import { solution } from '../references/common.mjs'
 
+export const name = "Secante";
+
 export function solve(equation, error, { inputFields }) {
     let x0 = parseInt(inputFields.filter(r => r.id == 'x0')[0].value);
     let x1 = parseInt(inputFields.filter(r => r.id == 'x1')[0].value);
@@ -82,7 +84,7 @@ function initSolution() {
         }
     ];
     solution.message = "$$x_{n+1}={x_n - {{f(x_n)(x_n - x_{n-1})} \\over {f(x_n) - f(x_{n-1})}}}$$";
-    solution.methodName = "Secante";
+    solution.methodName = name;
 
     return solution;
 }

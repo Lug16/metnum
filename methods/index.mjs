@@ -1,7 +1,9 @@
 import * as NewtonRaphson from './newton-raphson.mjs';
 import * as Secant from './secant.mjs';
 
-export {
+const Methods = {
     NewtonRaphson,
     Secant
 };
+
+export default Methods;
