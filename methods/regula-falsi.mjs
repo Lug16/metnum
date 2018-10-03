@@ -24,8 +24,8 @@ export function solve(equation, error, { inputFields }) {
 
     solution.fields[0].values.push(counter + 1);
     solution.fields[1].values.push(x0);
-    solution.fields[3].values.push(x1);
-    solution.fields[2].values.push(fx0);
+    solution.fields[2].values.push(x1);
+    solution.fields[3].values.push(fx0);
     solution.fields[4].values.push(fx1);
     solution.fields[5].values.push(y);
     solution.fields[6].values.push(fy);
