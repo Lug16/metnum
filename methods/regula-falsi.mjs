@@ -3,34 +3,42 @@ import { solution } from '../references/common.mjs'
 export const name = "Regla Falsa";
 
 export function solve(equation, error, { inputFields }) {
-  const a = Math.abs(inputFields.filter(r => r.id == 'a')[0].value);
-  const b = Math.abs(inputFields.filter(r => r.id == 'b')[0].value);
+  let x0 = parseInt(inputFields.filter(r => r.id == 'x0')[0].value);
+  let x1 = parseInt(inputFields.filter(r => r.id == 'x1')[0].value);
 
   let solution = initSolution();
 
   let currentError = 1;
-  let x = parseInt(seed);
   let counter = 0;
 
-  do {
-    const fx = equation.eval({ x });
-    const dfx = math.derivative(equation, math.parse('x')).eval({ x });
-    const y = x - fx / dfx;
+  while (currentError > error) {
+    const fx0 = equation.eval({ x: x0 });
+    const fx1 = equation.eval({ x: x1 });
+    const y = x0 - fx0 * ((x1 - x0) / (fx1 - fx0));
+    const fy = equation.eval({ x: y });
+    const fx0fy = fx0 * fy;
 
     currentError = counter > 0
-      ? solution.fields[4].values[counter - 1] - y
+      ? Math.abs(solution.fields[5].values[counter - 1] - y)
       : 1;
 
     solution.fields[0].values.push(counter + 1);
-    solution.fields[1].values.push(x);
-    solution.fields[2].values.push(fx);
-    solution.fields[3].values.push(dfx);
-    solution.fields[4].values.push(y);
-    solution.fields[5].values.push(counter > 0 ? currentError : null);
+    solution.fields[1].values.push(x0);
+    solution.fields[3].values.push(x1);
+    solution.fields[2].values.push(fx0);
+    solution.fields[4].values.push(fx1);
+    solution.fields[5].values.push(y);
+    solution.fields[6].values.push(fy);
+    solution.fields[7].values.push(fx0fy);
+    solution.fields[8].values.push(counter > 0 ? currentError : null);
 
-    x = y;
+    if (fx0fy > 0)
+      x0 = y;
+    else
+      x1 = y;
+
     counter++;
-  } while (currentError > error)
+  }
 
   return solution;
 }
@@ -38,13 +46,13 @@ export function solve(equation, error, { inputFields }) {
 
 export const inputFields = [
   {
-    "id": 'a',
-    "label": 'Punto a',
-    "value": '1'
+    "id": 'x0',
+    "label": 'Punto x0',
+    "value": '0'
   },
   {
-    "id": 'b',
-    "label": 'Punto b',
+    "id": 'x1',
+    "label": 'Punto x1',
     "value": '1'
   }
 ]
@@ -57,7 +65,15 @@ function initSolution() {
       "int": true
     },
     {
+      "title": "x_{n-1}",
+      "values": [],
+    },
+    {
       "title": "x_n",
+      "values": [],
+    },
+    {
+      "title": "f(x_{n-1})",
       "values": [],
     },
     {
@@ -65,20 +81,24 @@ function initSolution() {
       "values": [],
     },
     {
-      "title": "f'(x_n)",
+      "title": "x_{n+1}",
+      "values": [],
+      "isAnswer": true
+    },
+    {
+      "title": "f(x_{n+1})",
       "values": [],
     },
     {
-      "title": "x_{(n+1)}",
+      "title": "f(x_{n-1})f(x_{n+1})",
       "values": [],
-      "isAnswer": true
     },
     {
       "title": "E",
       "values": [],
     }
   ];
-  solution.message = "Si \\(f'(x_n) \\ne 0\\) $$x_{(n+1)}=x_n - {f(x_n) \\over f'(x_n)}$$";
+  solution.message = "$$x_{n+1}={x_{n-1} - f(x_{n-1}){{x_n - x_{n-1}} \\over {f(x_n) - f(x_{n-1})}}}$$";
   solution.methodName = name;
 
   return solution;
