@@ -107,9 +107,10 @@
       const div = document.createElement("div");
       const input = document.createElement("input");
       const span = document.createElement("span");
-
+      const inputType = !!r.type ? r.type : "number";
+      
       let att = document.createAttribute("type");
-      att.value = "number";
+      att.value = inputType;
       input.setAttributeNode(att);
 
       att = document.createAttribute("id");
@@ -118,6 +119,10 @@
 
       att = document.createAttribute("value");
       att.value = r.value;
+      input.setAttributeNode(att);
+
+      att = document.createAttribute("class");
+      att.value = `input-${inputType}`;
       input.setAttributeNode(att);
 
       input.addEventListener("change", handleChange);
