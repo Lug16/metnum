@@ -58,19 +58,19 @@ function initSolution() {
             "int": true
         },
         {
-            "title": "x_n",
-            "values": [],
-        },
-        {
-            "title": "f(x_n)",
-            "values": [],
-        },
-        {
             "title": "x_{n-1}",
             "values": [],
         },
         {
             "title": "f(x_{n-1})",
+            "values": [],
+        },
+        {
+            "title": "x_n",
+            "values": [],
+        },
+        {
+            "title": "f(x_n)",
             "values": [],
         },
         {
