@@ -1,5 +1,6 @@
 html,
   input,
+  select,
   button {
     font-family: 'Montserrat', sans-serif;
   }
@@ -15,7 +16,6 @@ html,
   input[type=text],
   select {
     padding: 12px 20px;
-    margin: 8px 0;
     display: inline-block;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -33,9 +33,15 @@ html,
     background-color: rgb(77, 102, 212);
   }
 
+  select > option{
+    padding: 3px;
+  }
+
   #container {
     display: flex;
-    flex-direction: row
+    flex-direction: row;
+    overflow: auto;
+    scroll-behavior: smooth;
   }
 
   #container>div {
@@ -43,6 +49,17 @@ html,
     flex-direction: column;
     width: 100%;
     margin: 20px;
+  }
+
+  #dynamicContainer{
+    background-color: aliceblue;
+    margin-bottom: 5px;
+    padding: 5px;
+  }
+
+  #dynamicContainer input{
+    margin: 3px;
+    width: 100px;
   }
 
   #equationInput {
@@ -81,8 +98,8 @@ html,
     justify-content: center;
   }
 
-  .inputResource input{
-    width: 70px;
+  .inputResource input, .inputResource select{
+    margin: 8px;
   }
 
   .inputResource span{

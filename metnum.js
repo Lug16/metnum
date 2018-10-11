@@ -25,7 +25,7 @@ export function displaySolution(solution, controls) {
         const value = solution.fields[i].values[j];
         const isLastCell = j + 1 == solution.fields[i].values.length;
         cell.classList.add(isAnswer && isLastCell ? 'answer' : 'x');
-        cell.innerHTML = !!value ? (!!integer ? value : value.toFixed(decimals)) : '-';
+        cell.innerHTML = value !== null ? (!!integer ? value : value.toFixed(decimals)) : '-';
       }
     }
 
