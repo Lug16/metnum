@@ -13,6 +13,11 @@ export const methodsList = [
         "inputFields": Methods.Bisection.inputFields
     },
     {
+        "name": Methods.FixedPoint.name,
+        "solve": Methods.FixedPoint.solve,
+        "inputFields": Methods.FixedPoint.inputFields
+    },
+    {
         "name": Methods.NewtonRaphson.name,
         "solve": Methods.NewtonRaphson.solve,
         "inputFields": Methods.NewtonRaphson.inputFields

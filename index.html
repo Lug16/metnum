@@ -1,7 +1,10 @@
 <!DOCTYPE html>
+
 <html>
 
 <head>
+  <meta charset="UTF-8">
+
   <script type="text/javascript" src="./references/graph.js"></script>
   <script type="text/javascript" src="./references/math.min.js"></script>
   <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"
@@ -108,7 +111,7 @@
       const input = document.createElement("input");
       const span = document.createElement("span");
       const inputType = !!r.type ? r.type : "number";
-      
+
       let att = document.createAttribute("type");
       att.value = inputType;
       input.setAttributeNode(att);

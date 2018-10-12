@@ -59,6 +59,15 @@ html,
 
   #dynamicContainer input{
     margin: 3px;
+  }
+
+  #dynamicContainer input[type=text]{
+    margin: 3px;
+    width: 20em;
+  }
+
+  #dynamicContainer input[type=number]{
+    margin: 3px;
     width: 100px;
   }
 
